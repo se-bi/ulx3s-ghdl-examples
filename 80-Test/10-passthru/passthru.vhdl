@@ -133,25 +133,25 @@ begin
   -- programming release counter
   process(clk_25MHz)
   begin
-      if rising_edge(clk_25MHz) then
-        R_prog_in <= S_prog_in;
-        if S_prog_out = "01" and R_prog_in = "11" then
-          R_prog_release <= (others => '0');
-        else
-          if R_prog_release(R_prog_release'high) = '0' then
-            -- R_prog_release <= R_prog_release + 1;
-	    R_prog_release <= std_logic_vector(unsigned(R_prog_release) + 1);
-          end if;
+    if rising_edge(clk_25MHz) then
+      R_prog_in <= S_prog_in;
+      if S_prog_out = "01" and R_prog_in = "11" then
+        R_prog_release <= (others => '0');
+      else
+        if R_prog_release(R_prog_release'high) = '0' then
+          -- R_prog_release <= R_prog_release + 1;
+          R_prog_release <= std_logic_vector(unsigned(R_prog_release) + 1);
         end if;
       end if;
+    end if;
   end process;
 
   process(sd_clk, wifi_gpio17) -- gpio17 is OLED CSn
   begin
-    if wifi_gpio17 = '1' then
-      R_spi_miso <= '0' & btn; -- sample button state during csn=1
-    else
-      if rising_edge(sd_clk) then
+    if rising_edge(sd_clk) then
+      if wifi_gpio17 = '1' then
+        R_spi_miso <= '0' & btn; -- sample button state during csn=1
+      else
         R_spi_miso <= R_spi_miso(R_spi_miso'high-1 downto 0) & R_spi_miso(R_spi_miso'high) ; -- shift to the left
       end if;
     end if;
@@ -163,7 +163,7 @@ begin
     if rising_edge(clk_25MHz) then
       if btn(0) = '0' and btn(1) = '1' then
         -- R_progn <= R_progn + 1; -- BTN0 BTN1 are pressed
-	R_progn <= std_logic_vector(unsigned(R_progn) + 1); -- BTN0 BTN1 are pressed
+        R_progn <= std_logic_vector(unsigned(R_progn) + 1); -- BTN0 BTN1 are pressed
       else
         R_progn <= (others => '0'); -- BTN0 BTN1 are not pressed
       end if;
