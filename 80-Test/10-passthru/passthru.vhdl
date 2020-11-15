@@ -62,7 +62,7 @@ entity passthru is
   -- flash_holdn, flash_wpn: out std_logic := '1';
 
   -- SD card (SPI1)
-  sd_d: inout std_logic_vector(0 downto 0); -- wifi_gpio 13,12,4,2
+  sd_d: inout std_logic_vector(1 downto 0); -- wifi_gpio 13,12,4,2
   sd_cmd: in std_logic; -- wifi_gpio15
   sd_clk: in std_logic; -- wifi_gpio14
   sd_cdn, sd_wp: in std_logic;
