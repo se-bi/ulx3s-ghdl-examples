@@ -29,8 +29,18 @@ jobs:
       - name: Upload Getelevel Netlist
         uses: actions/upload-artifact@v2
         with:
-          name: netlists-bitstreams
+          name: gatelevel-netlist
           path: "*/*/*.json"
+          retention-days: 7
+      - name: Upload Layout Netlist
+        uses: actions/upload-artifact@v2
+        with:
+          name: place-and-route
           path:  "*/*/*.config"
+          retention-days: 7
+      - name: Upload Bitstream
+        uses: actions/upload-artifact@v2
+        with:
+          name: bitstream
           path: "*/*/*.bit"
           retention-days: 7
