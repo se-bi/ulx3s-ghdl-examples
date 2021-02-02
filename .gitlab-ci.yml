@@ -1,8 +1,3 @@
-stages:
-  - synth_st
-  - pnr_st
-  - pack_st
-
 variables:
   DIRS: "01-Basics/00-Init \
          01-Basics/01-LED \
@@ -14,59 +9,25 @@ variables:
 #         80-Test/10-passthru"
 
 synth:
-  stage: synth_st
-  image: hdlc/ghdl:yosys
+  image: hdlc/impl:prjtrellis
   before_script:
-    - yosys --version
+    - yosys        --version
+    - nextpnr-ecp5 --version
+    - ecppack      --version
   script:
     - >
       for i in $DIRS;
       do set -e;
       pushd ${i};
       make synth;
-      popd;
-      done
-  artifacts:
-    paths:
-      - "*/*/*.json"
-    expire_in: 1 week
-
-pnr:
-  stage: pnr_st
-  image: hdlc/nextpnr:ecp5
-  before_script:
-    - apt update -qq && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends make
-    - nextpnr-ecp5 --version
-  script:
-    - >
-      for i in $DIRS;
-      do set -e;
-      pushd ${i};
-      touch *.json;
       make pnr;
-      popd;
-      done
-  artifacts:
-    paths:
-      - "*/*/*.config"
-    expire_in: 1 week
-
-pack:
-  stage: pack_st
-  image: hdlc/prjtrellis
-  before_script:
-    - ecppack --version
-  script:
-    - >
-      for i in $DIRS;
-      do set -e;
-      pushd ${i};
-      touch *.json;
-      touch *.config;
       make pack;
       popd;
       done
+
   artifacts:
     paths:
+      - "*/*/*.json"
+      - "*/*/*.config"
       - "*/*/*.bit"
-    expire_in: 1 week
+    expire_in: 42 days
